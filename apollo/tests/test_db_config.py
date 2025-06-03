@@ -1,10 +1,11 @@
 import os
+import tempfile
 from tortoise import Tortoise
 
-# Use SQLite for tests (in-memory or file-based)
-TEST_DB_URL = "sqlite://:memory:"
+# Create a unique temp file for the DB
+temp_db = tempfile.NamedTemporaryFile(suffix=".sqlite3", delete=False)
+TEST_DB_URL = f"sqlite:///{temp_db.name}"
 
-# Define your models - make sure to include all models used in your application
 TORTOISE_ORM = {
     "connections": {"default": TEST_DB_URL},
     "apps": {
@@ -18,10 +19,20 @@ TORTOISE_ORM = {
 }
 
 async def initialize_test_db():
-    """Initialize the test database with required schema"""
-    await Tortoise.init(config=TORTOISE_ORM)
-    await Tortoise.generate_schemas()
+    try:
+        await Tortoise.init(config=TORTOISE_ORM)
+        await Tortoise.generate_schemas(safe=True)
+        print(f"Test database initialized at {temp_db.name}")
+    except Exception as e:
+        print(f"Failed to initialize test database: {e}")
+        raise
 
 async def close_test_db():
-    """Close database connections"""
-    await Tortoise.close_connections()
+    try:
+        await Tortoise.close_connections()
+        if os.path.exists(temp_db.name):
+            os.remove(temp_db.name)
+            print(f"Test database cleaned up at {temp_db.name}")
+    except Exception as e:
+        print(f"Failed to clean up test database: {e}")
+        raise

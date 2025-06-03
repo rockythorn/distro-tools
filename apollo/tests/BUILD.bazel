@@ -14,7 +14,7 @@ py_test(
     deps = [
         "//apollo/rhworker:rhworker_lib",
         "//apollo/db:db_lib",
-        "//common:common_lib",  # Add common library dependency
+        "//common:common_lib",
     ],
 )
 
@@ -24,6 +24,16 @@ py_test(
     deps = [
         "//apollo/rhcsaf:rhcsaf_lib",
         "//apollo/rpm_helpers:rpm_helpers_lib",
+        "//common:common_lib",
+    ],
+)
+
+py_test(
+    name = "test_red_hat_advisory_updates",
+    srcs = ["test_red_hat_advisory_updates.py", "test_db_config.py"],
+    deps = [
+        "//apollo/rhworker:rhworker_lib",
+        "//apollo/db:db_lib",
         "//common:common_lib",
     ],
 )
