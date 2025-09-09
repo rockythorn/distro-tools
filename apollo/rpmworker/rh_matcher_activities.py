@@ -295,12 +295,19 @@ async def get_matching_rh_advisories(
     # First get advisories that matches the mirrored product
     # And also the overrides
     # Also exclude blocked advisories and advisories without packages
-    advisories = await RedHatAdvisory.filter(
-        affected_products__variant=mirror.match_variant,
-        affected_products__major_version=mirror.match_major_version,
-        affected_products__minor_version=mirror.match_minor_version,
-        affected_products__arch=mirror.match_arch,
-    ).order_by("red_hat_issued_at").prefetch_related(
+    
+    # Build query filters - if match_minor_version is None, match any minor version
+    query_filters = {
+        "affected_products__variant": mirror.match_variant,
+        "affected_products__major_version": mirror.match_major_version,
+        "affected_products__arch": mirror.match_arch,
+    }
+    
+    # Only add minor version filter if it's not None
+    if mirror.match_minor_version is not None:
+        query_filters["affected_products__minor_version"] = mirror.match_minor_version
+    
+    advisories = await RedHatAdvisory.filter(**query_filters).order_by("red_hat_issued_at").prefetch_related(
         "packages",
         "cves",
         "bugzilla_tickets",
