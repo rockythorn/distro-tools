@@ -5,8 +5,9 @@ from xml.etree import ElementTree as ET
 from fastapi import APIRouter, Response
 from slugify import slugify
 
-from apollo.db import AdvisoryAffectedProduct, SupportedProduct
+from apollo.db import AdvisoryAffectedProduct, AdvisoryPackage, SupportedProduct
 from tortoise.exceptions import DoesNotExist
+from tortoise.queryset import Prefetch
 from apollo.server.settings import COMPANY_NAME, MANAGING_EDITOR, UI_URL, get_setting
 from apollo.server.validation import Architecture
 
@@ -451,7 +452,13 @@ async def get_updateinfo_v2(
         "advisory",
         "advisory__cves",
         "advisory__fixes",
-        "advisory__packages",
+        Prefetch(
+            "advisory__packages",
+            queryset=AdvisoryPackage.filter(
+                repo_name=repo,
+                supported_product_id=supported_product.id,
+            ),
+        ),
         "supported_product",
     ).all()
 
