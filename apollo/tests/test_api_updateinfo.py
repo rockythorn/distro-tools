@@ -475,7 +475,8 @@ class TestUpdateinfoEndpoints(unittest.TestCase):
     @patch("apollo.server.routes.api_updateinfo.get_setting")
     @patch("apollo.server.routes.api_updateinfo.SupportedProduct")
     @patch("apollo.server.routes.api_updateinfo.AdvisoryAffectedProduct")
-    def test_get_updateinfo_v2_success(self, mock_aap, mock_sp, mock_get_setting):
+    @patch("apollo.server.routes.api_updateinfo.AdvisoryPackage")
+    def test_get_updateinfo_v2_success(self, mock_ap, mock_aap, mock_sp, mock_get_setting):
         """V2 endpoint returns valid XML with proper collection naming"""
         mock_get_setting.side_effect = self._mock_get_setting
 
@@ -526,7 +527,8 @@ class TestUpdateinfoEndpoints(unittest.TestCase):
 
     @patch("apollo.server.routes.api_updateinfo.SupportedProduct")
     @patch("apollo.server.routes.api_updateinfo.AdvisoryAffectedProduct")
-    def test_get_updateinfo_v2_no_advisories(self, mock_aap, mock_sp):
+    @patch("apollo.server.routes.api_updateinfo.AdvisoryPackage")
+    def test_get_updateinfo_v2_no_advisories(self, mock_ap, mock_aap, mock_sp):
         """V2 endpoint raises 404 when no advisories found"""
         mock_product = Mock()
         mock_product.id = 1
@@ -545,7 +547,8 @@ class TestUpdateinfoEndpoints(unittest.TestCase):
     @patch("apollo.server.routes.api_updateinfo.get_setting")
     @patch("apollo.server.routes.api_updateinfo.SupportedProduct")
     @patch("apollo.server.routes.api_updateinfo.AdvisoryAffectedProduct")
-    def test_get_updateinfo_v2_with_minor_version(self, mock_aap, mock_sp, mock_get_setting):
+    @patch("apollo.server.routes.api_updateinfo.AdvisoryPackage")
+    def test_get_updateinfo_v2_with_minor_version(self, mock_ap, mock_aap, mock_sp, mock_get_setting):
         """V2 endpoint filters by optional minor_version parameter"""
         mock_get_setting.side_effect = self._mock_get_setting
 

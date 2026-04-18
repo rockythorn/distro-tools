@@ -1264,6 +1264,13 @@ CREATE INDEX advisory_affected_products_supported_product_idx ON public.advisory
 
 
 --
+-- Name: advisory_affected_products_spid_major_arch_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX advisory_affected_products_spid_major_arch_idx ON public.advisory_affected_products USING btree (supported_product_id, major_version, arch);
+
+
+--
 -- Name: advisory_affected_products_variantx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1296,6 +1303,13 @@ CREATE INDEX advisory_fixes_ticket_id ON public.advisory_fixes USING btree (tick
 --
 
 CREATE INDEX advisory_packages_advisory_id ON public.advisory_packages USING btree (advisory_id);
+
+
+--
+-- Name: advisory_packages_advisory_repo_product_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX advisory_packages_advisory_repo_product_idx ON public.advisory_packages USING btree (advisory_id, repo_name, supported_product_id);
 
 
 --
