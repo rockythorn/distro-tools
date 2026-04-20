@@ -211,21 +211,11 @@ async def admin_user_delete(request: Request, user_id: int):
             }
         )
 
-    # Cannot delete yourself
     if user.id == request.state.user.id:
         return templates.TemplateResponse(
             "error.jinja", {
                 "request": request,
                 "message": "Cannot delete yourself",
-            }
-        )
-
-    # Cannot delete admins
-    if user.role == "admin":
-        return templates.TemplateResponse(
-            "error.jinja", {
-                "request": request,
-                "message": "Cannot delete admin users",
             }
         )
 

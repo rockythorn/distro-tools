@@ -72,6 +72,14 @@ py_test(
 )
 
 py_test(
+    name = "test_admin_users",
+    srcs = ["test_admin_users.py"],
+    deps = [
+        "//apollo/server:server_lib",
+    ],
+)
+
+py_test(
     name = "test_api_osv",
     srcs = ["test_api_osv.py"],
     deps = [
