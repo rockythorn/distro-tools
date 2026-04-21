@@ -10,3 +10,5 @@ node_modules
 container_data
 personal_work_dir
 *.log
+CLAUDE.md
+temp/
