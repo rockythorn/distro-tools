@@ -676,7 +676,7 @@ async def process_repomd(
 
     ret = {}
     raw_pkg_nvras = {}
-    raw_package_map = {}
+    pkg_name_map = {}
     for pkg in all_pkgs:
         # in the case of a module nvra the cleaned variable
         # becomes the package stripped of any module information
@@ -688,9 +688,10 @@ async def process_repomd(
             raw_pkg_nvras[cleaned] = []
         raw_pkg_nvras[cleaned].append(pkg)
 
-        if name not in raw_package_map:
-            raw_package_map[name] = []
-        raw_package_map[name].append(raw)
+        if name not in pkg_name_map:
+            pkg_name_map[name] = []
+        if cleaned not in pkg_name_map[name]:
+            pkg_name_map[name].append(cleaned)
 
     nvra_alias = {}
     check_pkgs = set()
@@ -719,8 +720,8 @@ async def process_repomd(
                     # Check if we can match the prefix instead
                     # First let's fetch the name matching NVRAs
                     # To cut down on the number of checks
-                    name_pkgs = raw_package_map.get(name, [])
-                    # pkg_nvra's will be 'cleaned'
+                    name_pkgs = pkg_name_map.get(name, [])
+                    # pkg_name_map values are cleaned NVRAs
                     for pkg_nvra in name_pkgs:
                         pkg_nvra_rs = pkg_nvra.rsplit(".", 1)
                         cleaned_rs = cleaned.rsplit(".", 1)
